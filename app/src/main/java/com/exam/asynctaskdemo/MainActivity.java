@@ -58,6 +58,9 @@ public class MainActivity extends AppCompatActivity {
             //cancel方法只是将对应的AsyncTask标记为cancel状态，并没有真正的取消线程的执行。
             imageAsynTask.cancel(true);
         }
+        if (progressBar.isShowing()) {
+            progressBar.cancel();
+        }
     }
 
     @Override
@@ -121,7 +124,7 @@ public class MainActivity extends AppCompatActivity {
                 thread.setName(keyUrl.getKey());
                 thread.start();
             }
-            return keyBitmaps;
+            return keyBitmaps;// 由于我们开辟了子线程ChildThread，此处返回的结果内容为空
         }
 
         /**
@@ -158,6 +161,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onProgressUpdate(Object... values) {
             super.onProgressUpdate(values);
+            if (act.get() == null) return;
             ProgressDialog progressBar = act.get().progressBar;
             switch ((int) values[0]) {
                 case CODE_UPDATE:
